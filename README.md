@@ -1,15 +1,10 @@
 
-Stage 1
-As a Rest Client
-I want to submit new orders for bricks
-So I can start customers’ orders
-Given
-A customer wants to buy any number of bricks
-When
-A create Order request for a number of bricks is submitted
-Then
-an Order reference is returned
-And the Order reference is unique to the submission
+## Create order
+
+
+
+
+
 As a Rest Client
 I want to retrieve orders
 So I can display simple customers’ orders
