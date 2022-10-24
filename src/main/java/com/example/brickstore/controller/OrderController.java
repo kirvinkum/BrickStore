@@ -1,8 +1,6 @@
 package com.example.brickstore.controller;
 
-import com.example.brickstore.entitiy.ListOrderResponse;
-import com.example.brickstore.entitiy.OrderRequest;
-import com.example.brickstore.entitiy.OrderResponse;
+import com.example.brickstore.entitiy.*;
 import com.example.brickstore.service.OrderService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +32,7 @@ public class OrderController {
     }
 
     /**
-     * list order with a valid Order reference
+     * list order with a valid order reference
      * @param order_ref
      * @return order refrence id and amount.
      * @exception BAD_REQUEST(400) Invalid request body
@@ -45,6 +43,35 @@ public class OrderController {
     @RequestMapping(value = "list", method = RequestMethod.GET)
     public ListOrderResponse list(@RequestParam(name = "order_ref") String OrderRef){
         return orderService.listOrder(OrderRef);
+    }
+
+
+    /**
+     * update order amount with a valid order reference
+     * @param order_ref
+     * @return order refrence id and amount.
+     * @exception BAD_REQUEST(400) Invalid request body
+     * @exception NOT_ACCEPTABLE(406) Invalid params
+     * @exception BAD_REQUEST(400) Invalid order ref
+     */
+    @ResponseBody
+    @RequestMapping(value = "update", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public OrderResponse updateAmount(@Valid @RequestBody OrderUpdateRequest orderUpdateRequest){
+        return orderService.updateOrder(orderUpdateRequest);
+    }
+
+    /**
+     * fullfill order amount with a valid order reference
+     * @param order_ref
+     * @return order refrence id and amount.
+     * @exception BAD_REQUEST(400) Invalid request body
+     * @exception NOT_ACCEPTABLE(406) Invalid params
+     * @exception BAD_REQUEST(400) Invalid order ref
+     */
+    @ResponseBody
+    @RequestMapping(value = "fullfill", method = RequestMethod.PATCH, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public OrderResponse fullFill(@Valid @RequestBody OrderFullFillRequest orderFullFillRequest){
+        return orderService.fullFillOrder(orderFullFillRequest);
     }
 
 }

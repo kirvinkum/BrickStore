@@ -1,14 +1,15 @@
 package com.example.brickstore.service;
 
-import com.example.brickstore.entitiy.ListOrderResponse;
-import com.example.brickstore.entitiy.OrderRequest;
-import com.example.brickstore.entitiy.OrderResponse;
+import com.example.brickstore.entitiy.*;
 import com.example.brickstore.exception.CustomException;
+import com.example.brickstore.exception.OrderNotFoundException;
 import com.example.brickstore.model.Order;
 import com.example.brickstore.repository.OrderRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 @Service
 public class OrderService {
@@ -43,4 +44,48 @@ public class OrderService {
         //or return proper response
         return new ListOrderResponse(order.getId(), order.getAmount());
     }
+
+    @Transactional
+    public OrderResponse updateOrder(OrderUpdateRequest orderUpdateRequest) {
+
+        Order order = orderRepository.findById(orderUpdateRequest.getOrderRef());
+
+        if(order == null){
+            throw new OrderNotFoundException("Order not found.");
+        }
+
+        if(order.getOrderStatus() == OrderStatus.DISPATCHED){
+            throw new CustomException("Order update not allowed.");
+        }
+
+        order.setAmount(orderUpdateRequest.getAmount());
+        order = orderRepository.save(order);
+
+        //return order ref
+        return new OrderResponse(order.getId());
+    }
+
+    @Transactional
+    public OrderResponse fullFillOrder(OrderFullFillRequest orderFullFillRequest) {
+
+        Order order = orderRepository.findById(orderFullFillRequest.getOrderRef());
+
+        if(order == null){
+            throw new OrderNotFoundException("Order not found.");
+        }
+
+        if(order.getOrderStatus() == orderFullFillRequest.getStatus()){
+            //already up to date
+            return new OrderResponse(order.getId());
+        }
+
+        order.setOrderStatus(orderFullFillRequest.getStatus());
+        order = orderRepository.save(order);
+
+        //return order ref
+        return new OrderResponse(order.getId());
+
+    }
+
+
 }

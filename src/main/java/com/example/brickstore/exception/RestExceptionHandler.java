@@ -15,6 +15,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 public class RestExceptionHandler {
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<RestException> handleOrderNotFoundException(OrderNotFoundException exception) {
+        return buildResponseEntity(new RestException (BAD_REQUEST, exception.getMessage()));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestException> handleNotValidArgsException(MethodArgumentNotValidException ex) {
         final List<String> errors = new ArrayList<>();
