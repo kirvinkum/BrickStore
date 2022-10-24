@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+
 @ControllerAdvice
 public class RestExceptionHandler {
 
@@ -27,6 +29,12 @@ public class RestExceptionHandler {
     public ResponseEntity<RestException> invalidInputException(InvalidInputException ex) {
         return buildResponseEntity(new RestException (HttpStatus.NOT_ACCEPTABLE, ex.getMessage ()));
     }
+
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<RestException> handleCustomException(CustomException exception) {
+        return buildResponseEntity(new RestException (BAD_REQUEST, exception));
+    }
+
 
     private ResponseEntity<RestException> buildResponseEntity(RestException restException) {
         return new ResponseEntity<>(restException, restException.getStatus());

@@ -1,5 +1,6 @@
 package com.example.brickstore.controller;
 
+import com.example.brickstore.entitiy.ListOrderResponse;
 import com.example.brickstore.entitiy.OrderRequest;
 import com.example.brickstore.entitiy.OrderResponse;
 import com.example.brickstore.service.OrderService;
@@ -30,6 +31,20 @@ public class OrderController {
     @RequestMapping(value = "create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest orderRequest){
         return orderService.createOrder(orderRequest);
+    }
+
+    /**
+     * list order with a valid Order reference
+     * @param order_ref
+     * @return order refrence id and amount.
+     * @exception BAD_REQUEST(400) Invalid request body
+     * @exception NOT_ACCEPTABLE(406) Invalid params
+     * @exception BAD_REQUEST(400) Invalid order ref
+     */
+    @ResponseBody
+    @RequestMapping(value = "list", method = RequestMethod.GET)
+    public ListOrderResponse list(@RequestParam(name = "order_ref") String OrderRef){
+        return orderService.listOrder(OrderRef);
     }
 
 }

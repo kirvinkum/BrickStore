@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,4 +48,14 @@ class OrderControllerTest {
     }
 
 
+    @Test
+    void list() throws Exception {
+
+        mockMvc
+                .perform(get("/order/list")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("order_ref", "ORDER00001")
+                )
+                .andExpect(status().isOk());
+    }
 }
